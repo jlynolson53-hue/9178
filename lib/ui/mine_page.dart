@@ -1,4 +1,3 @@
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -93,7 +92,7 @@ class MinePage extends StatelessWidget {
           const ListTile(
             leading: Icon(Icons.info_outline),
             title: Text('关于'),
-            subtitle: Text('PexDL 1.0.1 · 私人本地使用\n视频由 Pexels 提供（pexels.com）'),
+            subtitle: Text('PexDL 1.0.2 · 私人本地使用\n视频由 Pexels 提供（pexels.com）'),
           ),
         ]),
       ),
@@ -147,8 +146,26 @@ class MinePage extends StatelessWidget {
         return;
       }
     }
-    final dir = await FilePicker.platform.getDirectoryPath(dialogTitle: '选择保存目录');
-    if (dir != null) {
+    final c = TextEditingController(text: settings.saveDir ?? '/storage/emulated/0/Download/PexDL');
+    final dir = await showDialog<String>(
+      context: context,
+      builder: (d) => AlertDialog(
+        title: const Text('保存目录'),
+        content: Column(mainAxisSize: MainAxisSize.min, children: [
+          TextField(controller: c, decoration: const InputDecoration(labelText: '完整路径')),
+          const SizedBox(height: 8),
+          Wrap(spacing: 6, children: [
+            for (final pth in ['/storage/emulated/0/Download/PexDL', '/storage/emulated/0/Movies/PexDL'])
+              ActionChip(label: Text(pth.split('/0/').last), onPressed: () => c.text = pth),
+          ]),
+        ]),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(d), child: const Text('取消')),
+          FilledButton(onPressed: () => Navigator.pop(d, c.text.trim()), child: const Text('保存')),
+        ],
+      ),
+    );
+    if (dir != null && dir.isNotEmpty) {
       settings.saveDir = dir;
       if (context.mounted) toast(context, '新下载将保存到：$dir');
     }
