@@ -93,7 +93,7 @@ class MinePage extends StatelessWidget {
           const ListTile(
             leading: Icon(Icons.info_outline),
             title: Text('关于'),
-            subtitle: Text('PexDL 1.0.0 · 私人本地使用\n视频由 Pexels 提供（pexels.com）'),
+            subtitle: Text('PexDL 1.0.1 · 私人本地使用\n视频由 Pexels 提供（pexels.com）'),
           ),
         ]),
       ),
